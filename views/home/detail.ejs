@@ -1,0 +1,79 @@
+<%- include ('../include/head.ejs') %> 
+    <link rel="stylesheet" href="/css/home/detail.css">
+</head>
+<body>
+    <%- include ('../include/nav.ejs') %> 
+    <main >
+        <section class="major-container" id="img-container" style="--bg-img: url('<%= item.imageUrl %>') ">
+            <div id="image-container-minor">
+                <% if (item.link) { %>
+                    <a href="<%= item.link %> " target="_blank" class="major-container-link"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                <% } %>
+                <img id="image" src="<%= item.imageUrl %> " alt="cover of <%= item.title %> ">
+            </div>
+        </section>
+        <section class="major-container" id="major-detail-container">
+            <h1>Details</h1>
+            <article class="detail">
+                <div class="detail-container">
+                    <span class="details-span">Title</span> <br>
+                    <p class="details-p"><%= item.title %> </p>
+                </div>
+                <div class="detail-container">
+                    <span class="details-span">Type</span> <br>
+                    <p class="details-p"><%= item.type %> </p>
+                </div>
+                <div class="detail-container detail-grid">
+                    <div class="detail-containter-minor item-s">
+                        <span class="details-span">Item's Status</span> <br>
+                        <p class="details-p"><%= item.itemStatus %> </p>
+                    </div>
+                    <div class="detail-containter-minor self-s">
+                        <span class="details-span">Your's Status</span> <br>
+                        <p class="details-p"><%= item.userStatus %> </p>
+                    </div>
+                    <div class="detail-containter-minor total">
+                        <span for="totalChap" class="form-label">Total</span> <br>
+                        <p class="details-p"><%= item.totalChap %> </p>
+                    </div>
+                    <div class="detail-containter-minor stopped">
+                        <span class="details-span">Stopped at</span> <br>
+                        <p class="details-p"><%= item.stopChap %> </p> 
+                    </div>
+                    <div class="detail-containter-minor tags">
+                        <span class="details-span">Tags</span> <br>
+                        <div id="tags-div">
+                            <% if (item.tags[0] === '') { %>
+                                    <span>No tags here</span>
+                            <% } else { %>
+                                <% for(let tag of item.tags) { %>
+                                    <span><%= tag %> </span>
+                                <% } %>
+                             <% } %> 
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-btns">
+                    <a id="edit-btn" href="/edit-item/<%= item._id %>" aria-label="edit button">
+                        <i class="edit-icon fa-solid fa-pen-to-square"></i> 
+                        <span class="btn-txt">Edit</span>
+                    </a>
+                    <button type="button" id="delete-btn" aria-label="delete button">
+                        <i class="delete-icon fa-solid fa-trash"></i> 
+                        <span class="btn-txt">Delete</span>
+                    </button>
+                    <form id="delete-form" action="/delete-item/<%= item._id %> " method="post">
+                        <span>Are you sure you want to delete this item?</span>
+                        <div>
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button class="form-btn" id="cancel-btn-form" type="button">Cancel</button>
+                            <button class="form-btn" id="delete-btn-form" type="submit">Delete</button>
+                        </div>
+                    </form>
+                    <div id="darken"></div>
+                </div>
+            </article>
+        </section>
+    </main>
+    <script src="../javascript/details.js"></script>
+<%- include ('../include/end.ejs') %> 

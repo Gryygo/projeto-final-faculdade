@@ -1,0 +1,82 @@
+<%- include('include/head.ejs')%>
+</head>
+<body>
+    <%- include('include/nav.ejs') %>
+    <main>
+        <div class="subheader-container">
+            <h2 class="item-count">
+                <% if (isSearch) { %>
+                    <%= totalNum %> items match this search: 
+                <% } else {%>
+                    <%= totalNum %> items:
+                <% } %> 
+            </h2>
+            <article class="container">
+                <button class="container-icon searchBtn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <a class="container-icon" href="/add-item">
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            </article>
+        </div>
+        <article class="search" id="searchContainer">
+            <form class="search-form" action="/search" method="get">
+                <article class="search-form-container">
+                    <label for="title" class="form-label">Title</label> <br>
+                    <input class="form-input" type="text" name="title" id="title" placeholder="Search for title">
+                </article>
+                <article class="search-form-container">
+                    <label for="type" class="form-label">Type</label> <br>
+                    <input type="text" name="type" id="type" placeholder="Search for media type"></input>
+                </article>
+                <article class="search-form-container">
+                    <label for="userStatus" class="form-label">Your's Status</label> <br>
+                    <input type="text" name="userStatus" id="userStatus" placeholder="Search for your status"></input>
+                </article>
+                <article class="search-form-container">
+                    <label for="tags" class="form-label">Tags</label> <br>
+                    <input type="text" name="tags" id="tags" placeholder="Search for a tag"></input>
+                </article>
+                <article class="search-form-container" id="submit-container">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <br>
+                    <input  class="form-btn" type="submit" value="Search">
+                </article>
+            </form>
+        </article>
+        <article class="gallery">
+            <% if (items.length < 1) { %>
+                <section>
+                    <h1 id="notFound">No items here</h1>
+                </section>
+            <% } else { %>
+                <% for( let item of items) { %>
+                    <section class="gallery-card" id="card-1" style="--bg-img: url('<%= item.imageUrl %>')">
+                        <div class="progressbar">
+                            <svg class="progressbar-svg">
+                                <!-- This expression is responsible for extracting the % of completion and calculating the right radius -->
+                              <circle style="--percent: <%= 440 - (440 * Math.floor((100*item.stopChap) / item.totalChap)) / 100 %> "  cx="80" cy="80" r="70" class="progressbar-svg-circle circle shadow-html"> </circle>
+                            </svg>
+                            <span class="progressbar-text shadow-html">
+                                <% if (item.stopChap === item.totalChap &&  item.itemStatus === "Finished") { %>
+                                        <div style="height: 0.6rem;"></div>
+                                        <span style="font-size: 4rem" aria-label="star-symbol">
+                                            &#9733;
+                                        </span>
+                                    <% } else { %>
+                                        <%= Math.floor((100*item.stopChap) / item.totalChap) %>% 
+                                <% } %> 
+                            </span>
+                        </div>
+
+                        <h2 class="gallery-card-title"><%= item.title %></h2>
+                        <a href="/item/<%= item._id %> " class="gallery-card-btn">Details</a>
+                    </section>  
+                <% } %>
+            </article>
+            <%- include ('include/pagination.ejs', {currentPage: currentPage, nextPage: nextPage, previousPage: previousPage, lastPage: lastPage, hasNextPage: hasNextPage, hasPreviousPage: hasPreviousPage}) %>
+        <% } %> 
+    </main>
+    <script src="javascript/search.js"></script>
+<%- include ('include/end.ejs') %> 
+
